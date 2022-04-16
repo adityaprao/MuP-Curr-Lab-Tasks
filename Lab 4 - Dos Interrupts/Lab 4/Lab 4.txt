@@ -1,0 +1,32 @@
+.model tiny
+
+.data
+sz db 0
+inputstr db 32 dup(0)
+
+.code
+.startup
+		MOV CX, 0
+		MOV AH, 01H
+		INT 21H
+		INC CX
+
+START:		CMP AL, 13
+		JZ READ
+		MOV AH, 0
+		PUSH AX
+		MOV AH, 01H
+		INT 21H
+		INC CX
+		JMP START
+
+READ:		POP DX
+		MOV AH, 02H	
+		INT 21H
+		DEC CX
+		JCXZ SKIP
+		JMP READ
+SKIP:	
+
+.exit
+end

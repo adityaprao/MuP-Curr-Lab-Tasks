@@ -1,0 +1,85 @@
+.model tiny
+.data
+	username db 'Aditya'
+	password db '2019B3A30576P'
+	initMsg db 'Kindly nter your name without any space $'
+	passMsg db 'Please enter password $'
+	succMsg db 'Authentication Successful. You are welcome Aditya $'
+	errMsg db 'Wrong Password $'
+	maxLength db 20
+	userLength db ?
+	typedUsername db 15 dup('$')
+	typedPassword db 15 dup('$')
+.code
+.startup
+		lea dx, initMsg
+		mov ah, 09h
+		int 21h
+
+		lea dx, maxLength
+		mov ah, 0ah
+		int 21h
+
+		mov cx, 07h
+		lea si, typedUsername
+		lea di, username
+		cld
+		repe cmpsb
+		cmp cx, 00
+		jnz exit
+
+		mov dl, 0ah
+		mov ah, 02h
+		int 21h
+
+		lea dx, passMsg
+		mov ah, 09h
+		int 21h
+
+		mov cx, 00
+		lea di, typedPassword
+
+readPass:
+		mov ah, 08h
+		int 21h
+		cmp al, 0dh
+		jz checkPass
+		cld
+		stosb
+		mov dl, '*'
+		mov ah, 02h
+		int 21h
+		inc cx
+		cmp cx, 0eh
+		jnz readPass
+
+checkPass:
+		mov cx, 0dh
+		lea si, password
+		lea di, typedPassword
+		cld
+		repe cmpsb
+		cmp cx, 00
+		jnz wrongPass
+
+
+		mov dl, 0ah
+		mov ah, 02h
+		int 21h	
+		lea dx, succMsg
+		mov ah, 09h
+		int 21h
+
+		jmp exit
+
+wrongPass:
+		mov dl, 0ah
+		mov ah, 02h
+		int 21h
+		lea dx, errMsg
+		mov ah, 09h
+		int 21h
+
+exit:
+.exit
+end

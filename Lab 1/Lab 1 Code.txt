@@ -1,0 +1,15 @@
+debugx
+a
+MOV AX,3C
+
+n task1.txt
+l 300
+g 103
+
+a
+MOV [300],AL
+
+g 106
+
+D DS:300
+
